@@ -1,5 +1,7 @@
-import { Command } from 'cliffy/command/mod.ts'
+import { command } from './cli_deps.ts'
 import { type Condition, conditionalize } from './conditionalize.ts'
+
+const { Command } = command
 
 type Params = {
 	inPath: string

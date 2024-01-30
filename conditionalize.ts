@@ -1,9 +1,11 @@
-import { BlobReader, BlobWriter, type Entry as _Entry, TextWriter, ZipReader, ZipWriter } from 'zipjs'
-import { type Cheerio, type Element, load } from 'cheerio'
-import { join, relative } from 'std/path/mod.ts'
+import { cheerio, path, zipjs } from './deps.ts'
+
+const { join, relative } = path
+const { BlobReader, BlobWriter, TextWriter, ZipReader, ZipWriter } = zipjs
+const { load } = cheerio
 
 // https://github.com/gildas-lormeau/zip.js/issues/371
-type Entry = _Entry & { getData: Exclude<_Entry['getData'], undefined> }
+type Entry = zipjs.Entry & { getData: Exclude<zipjs.Entry['getData'], undefined> }
 
 type Slide = {
 	path: string
@@ -39,7 +41,7 @@ export async function conditionalize(fileBytes: Uint8Array, condition: Condition
 
 	const excludeSlides: Slide[] = []
 
-	function relToSlide($rel: Cheerio<Element>, pathRelativeTo: string): Slide {
+	function relToSlide($rel: cheerio.Cheerio<cheerio.Element>, pathRelativeTo: string): Slide {
 		const path = join('ppt', relative(pathRelativeTo, $rel.attr('Target') ?? ''))
 
 		const slide = { path }
